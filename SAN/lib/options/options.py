@@ -82,7 +82,7 @@ class Options():
     parser.add_argument('--manualSeed',       type=int,                   help='manual seed')
 
     # From 300W-EVAL.sh
-    gpus = 1
+    gpus = 0
     model = 'itn_cpm'
     epochs = 50
     stages = 3
@@ -93,8 +93,6 @@ class Options():
     dataset_name = '300W_GTB'
     san_base_path = '/content/drive/MyDrive/evals/SAN/'
     list_base = '/content/drive/MyDrive/Datasets/landmark-datasets/300W-Style/lists/300W/Original/'
-
-    print(list_base)
 
     args = [
         '--train_list', list_base + '300w.train.GTB',
