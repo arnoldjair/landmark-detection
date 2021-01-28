@@ -8,7 +8,7 @@ import torch
 import init_path
 
 class Options():
-  def __init__(self, model_names):
+  def __init__(self, model_names, colab=False):
     parser = argparse.ArgumentParser(description='Train Style Aggregated Network', formatter_class=argparse.ArgumentDefaultsHelpFormatter)   
     parser.add_argument('--train_list',       type=str,   nargs='+',      help='The list file path to the video training dataset.')
     parser.add_argument('--eval_lists',       type=str,   nargs='+',      help='The list file path to the video testing dataset.')
@@ -80,7 +80,51 @@ class Options():
     parser.add_argument('--workers',          type=int,   default=2,      help='number of data loading workers (default: 2)')
     # Random seed
     parser.add_argument('--manualSeed',       type=int,                   help='manual seed')
-    self.opt = parser.parse_args()
+
+    # From 300W-EVAL.sh
+    gpus = 1
+    model = 'itn_cpm'
+    epochs = 50
+    stages = 3
+    batch_size = 8
+    sigma = 4
+    height = 128
+    width = 128
+    dataset_name = '300W_GTB'
+    san_base_path = '/content/drive/MyDrive/evals/SAN/'
+    list_base = '/content/drive/MyDrive/Datasets/landmark-datasets/300W-Style/lists/300W/Original/'
+
+    print(list_base)
+
+    args = [
+        '--train_list', list_base + '300w.train.GTB',
+        '--eval_lists', list_base + '300w.test.common.GTB', list_base +
+        '300w.test.challenge.GTB', list_base + '300w.test.full.GTB',
+        '--num_pts', '68', '--pre_crop_expand',  '0.2',
+        '--arch',  model, '--cpm_stage',  str(stages),
+        '--resume',  '/content/drive/MyDrive/models/SAN/checkpoint_49.pth.tar',
+        '--cycle_model_path',  san_base_path +
+        'SAN_300W_GTB_itn_cpm_3_50_sigma4_128x128x8/cycle-gan/itn-epoch-200-201',
+        '--eval_once',
+        '--save_path',  san_base_path + 'SAN_' + dataset_name + '_' + model + '_' +
+        str(stages) + '_' + str(epochs) + '_sigma' + str(sigma) +
+        '_' + str(height) +'x' + str(width)+'x8-Only-Eval',
+        '--learning_rate', '0.00005',  '--decay',  '0.0005',  '--batch_size', str(batch_size), '--workers', '20', '--gpu_ids', str(gpus),
+        '--epochs',  str(epochs), '--schedule',  '30', '35', '40', '45', '--gammas', '0.5', '0.5', '0.5', '0.5',
+        '--dataset_name', dataset_name,
+        '--scale_min', '1', '--scale_max', '1', '--scale_eval', '1', '--eval_batch', str(batch_size),
+        '--crop_height', str(height), '--crop_width', str(width), '--crop_perturb_max', '30',
+        '--sigma', str(sigma), '--print_freq', '50', '--print_freq_eval', '100', '--pretrain',
+        '--evaluation', '--heatmap_type',  'gaussian', '--argmax_size',  '3',
+        '--epoch_count',  '1',  '--niter',  '100', '--niter_decay',  '100', '--identity',  '0.1',
+        '--cycle_batchSize',  '32'
+    ]
+
+    if (colab == True):
+      self.opt = parser.parse_args(args)
+    else:
+      self.opt = parser.parse_args()
+    
     if self.opt.gpu_ids is None:
       str_ids = []
     else:
