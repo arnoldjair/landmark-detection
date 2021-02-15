@@ -135,7 +135,7 @@ if __name__ == '__main__':
   this_dir = osp.dirname(os.path.abspath(__file__))
   SAVE_DIR = osp.join(this_dir, 'lists', '300W')
   print ('This dir : {}, HOME : [{}] : {}'.format(this_dir, HOME_STR, os.environ[HOME_STR]))
-  path_300w = osp.join( os.environ[HOME_STR], 'datasets', 'landmark-datasets', '300W')
+  path_300w = osp.join( os.environ[HOME_STR], 'datasets', '300W')
   USE_BOXES = ['GTB', 'DET']
   box_datas = load_all_300w(path_300w)
 

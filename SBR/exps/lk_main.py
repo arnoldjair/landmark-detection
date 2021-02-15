@@ -188,5 +188,5 @@ def main(args):
   logger.close()
 
 if __name__ == '__main__':
-  args = obtain_args()
+  args = obtain_args(True)
   main(args)
