@@ -101,7 +101,8 @@ def obtain_args(colab=False):
         '--scale_max', '1',
         '--scale_eval', '1',
         '--heatmap_type', 'gaussian',
-        '--print_freq', '10'
+        '--print_freq', '10',
+        '--eval_once'
     ]
 
     if (colab == True):
